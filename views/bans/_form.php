@@ -55,14 +55,12 @@ if ($ban->ban_length === -1 || $ban->ban_length !== 0 && $date->getTimestamp() <
                             'type' => DateTimePicker::TYPE_INPUT,
                             'options' => [
                                 'placeholder' => 'Ввод даты/времени...',
-                                'value' => is_int($model->until) ?
-                                    Yii::$app->formatter->asDatetime($model->until ?? time(), 'dd.MM.Y hh:mm') :
-                                    $model->until,
+                                'value' =>$model->until
                             ],
                             'convertFormat' => true,
                             'pluginOptions' => [
                                 'format' => 'dd.MM.yyyy hh:i',
-                                'startDate' => Yii::$app->formatter->asDatetime(strtotime('- 1 day'), 'dd.MM.Y hh:mm'),
+                                'startDate' => strtotime('- 1 day'),
                                 'autoclose' => true,
                                 'weekStart' => 1,
                                 'todayHighlight' => true,
@@ -100,6 +98,7 @@ if ($ban->ban_length === -1 || $ban->ban_length !== 0 && $date->getTimestamp() <
         <?php if ($isBanActive) : ?>
             <?= Html::a(Yii::t('app', 'Unban'), ['unban', 'id' => $ban->id], ['class' => 'btn btn-light']) ?>
         <?php endif; ?>
+        <?= Html::a(Yii::t('app', 'Cancel'), ['index'], ['class' => 'btn btn-secondary']) ?>
         <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-dark']) ?>
     </div>
 

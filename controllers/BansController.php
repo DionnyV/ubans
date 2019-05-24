@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\form\BanForm;
+use app\services\BanService;
 use Yii;
 use app\models\Ban;
 use app\models\search\BanSearch;
@@ -17,6 +18,11 @@ use yii\web\Response;
  */
 class BansController extends Controller
 {
+    /**
+     * @var BanService
+     */
+    private $banService;
+
     /**
      * {@inheritdoc}
      */
@@ -40,6 +46,15 @@ class BansController extends Controller
                 ],
             ],
         ];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function __construct($id, $module, BanService $banService, $config = [])
+    {
+        $this->banService = $banService;
+        parent::__construct($id, $module, $config);
     }
 
     /**
@@ -85,7 +100,8 @@ class BansController extends Controller
     {
         $model = new BanForm($this->findModel($id));
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $this->banService->save($model);
             return $this->redirect(['view', 'id' => $model->ban->id]);
         }
 
@@ -104,8 +120,7 @@ class BansController extends Controller
     public function actionUnban($id)
     {
         $model = $this->findModel($id);
-        $model->ban_length = -1;
-        $model->save();
+        $this->banService->unban($model);
 
         return $this->redirect(['view', 'id' => $model->id]);
     }
@@ -119,10 +134,10 @@ class BansController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Ban::findOne($id)) !== null) {
-            return $model;
+        try {
+            return $this->banService->getById($id);
+        } catch (\Exception $e) {
+            throw new NotFoundHttpException('Бан не найден.');
         }
-
-        throw new NotFoundHttpException(Yii::t('app', 'Запрошенная страница не найдена.'));
     }
 }

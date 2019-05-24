@@ -11,7 +11,7 @@ use yii\helpers\ArrayHelper;
 /**
  * Модель формы создания пользователя.
  */
-class UserCreateForm extends User
+class UserForm extends User
 {
     public $user;
 

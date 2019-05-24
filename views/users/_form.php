@@ -1,6 +1,6 @@
 <?php
 
-use app\models\form\UserCreateForm;
+use app\models\form\UserForm;
 use app\models\RoleReference;
 use app\models\User;
 use yii\bootstrap4\Html;
@@ -10,7 +10,7 @@ use yii\widgets\Pjax;
 /* @var $this yii\web\View */
 /* @var $user User */
 /* @var $form yii\widgets\ActiveForm */
-/* @var $model UserCreateForm */
+/* @var $model UserForm */
 
 $user = $model->user;
 
@@ -53,8 +53,9 @@ $user = $model->user;
         </div>
     </div>
 
-    <div class="form-group">
-        <?= Html::submitButton(Yii::t('app', 'Create'), ['class' => 'btn btn-success']) ?>
+    <div class="form-group text-right">
+        <?= Html::a(Yii::t('app', 'Cancel'), ['index'], ['class' => 'btn btn-secondary']) ?>
+        <?= Html::submitButton(Yii::t('app', 'Create'), ['class' => 'btn btn-dark']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

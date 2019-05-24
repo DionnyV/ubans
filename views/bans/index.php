@@ -4,6 +4,7 @@ use app\models\Ban;
 use app\services\BanService;
 use yii\bootstrap4\Html;
 use yii\grid\GridView;
+use yii\helpers\Url;
 use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
@@ -20,6 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= GridView::widget([
         'layout' => '{items}{pager}',
+        'id' => 'bans',
         'dataProvider' => $dataProvider,
         'rowOptions' => function ($model, $key, $index, $grid) {
             if (!BanService::isActive($model)) {
@@ -58,9 +60,9 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
 $this->registerJs(
     '$(function(){
-            $("tr").on("click", function(){
+            $("#bans").on("click", "tr", function(){
                 var banId = $(this).attr("data-key");
-                document.location.href = "' . \yii\helpers\Url::to(['bans/view']) . '?id=" + banId;
+                document.location.href = "' . Url::to(['bans/view']) . '?id=" + banId;
             });
     });'
 );

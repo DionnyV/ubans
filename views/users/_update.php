@@ -36,8 +36,20 @@ $privileges = $model->privilegesForm->privileges;
                     <?= $form->field($user, 'email')->textInput(['maxlength' => true]) ?>
                     <?= $form->field($user, 'username')->textInput(['maxlength' => true]) ?>
                     <?= $form->field($user, 'password')->textInput(['maxlength' => true]) ?>
+                    <?= $form->field($user, 'auth_key', ['template' => '
+                           {label}
+                           <div class="input-group">
+                              {input}
+                              <div class="input-group-append">
+                                <span class="input-group-text" onclick="UserUpdateForm.generateAuthKey()">#</span>
+                              </div>
+                               {error}{hint}
+                           </div>
+                           <small class="form-text text-muted"></small>
+                       '])->textInput(['maxlength' => true]); ?>
                     <?= $form->field($model->userForm, 'role')->dropdownList(RoleReference::getRoles()) ?>
-                    <?= $form->field($user, 'is_deleted')->checkbox() ?>
+                    <?= $form->field($user, 'status')->dropdownList(User::getStatusLabels()) ?>
+
                 </li>
             </ul>
         </div>
@@ -66,9 +78,9 @@ $privileges = $model->privilegesForm->privileges;
                         <input class="form-check-input" type="checkbox"
                                name="Access[<?= $privilege->server_id ?>][enable]"
                                id="server-<?= $privilege->server_id ?>"
-                               onchange="PrivilegeForm.toggle(this)"
+                               onchange="UserUpdateForm.toggle(this)"
                             <?php if (!empty($privilege->expire)) : ?>
-                                data-id="<?= $privilege->user_id . '-' . $privilege->server_id?>"
+                                data-id="<?= $privilege->user_id . '-' . $privilege->server_id ?>"
                                 checked
                             <?php endif; ?>
                         >
@@ -104,15 +116,21 @@ $privileges = $model->privilegesForm->privileges;
         </div>
     </div>
 
-    <div class="form-group">
-        <?= Html::submitButton(Yii::t('app', 'Update'), ['class' => 'btn btn-success']) ?>
+    <div class="form-group text-right">
+        <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $user->id], ['class' => 'btn btn-warning']) ?>
+        <?= Html::submitButton(Yii::t('app', 'Update'), ['class' => 'btn btn-dark']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
     <?php Pjax::end(); ?>
 </div>
 <script>
-    var PrivilegeForm = {
+    var UserUpdateForm = {
+        generateAuthKey: function () {
+            var randomKey = Math.random().toString(36).substr(2) + '_' + Math.random().toString(36).substr(2);
+
+            $("input[name='User[auth_key]'").val(randomKey);
+        },
         toggle: function (el) {
             el = $(el);
             var inputBlockId = $("#privilegeServer" + el.attr('id').split('-')[1]);
@@ -136,10 +154,10 @@ $privileges = $model->privilegesForm->privileges;
         deletePrivilege: function (userId, serverId) {
             $.ajax({
                 url: "<?= Url::toRoute(['users/delete-privilege']) ?>?userId=" + userId + "&serverId=" + serverId,
-                success: function(response) {
+                success: function (response) {
                     return true;
                 },
-                error: function() {
+                error: function () {
                     alert('Произошла ошибка при удалении.');
                     return false;
                 }

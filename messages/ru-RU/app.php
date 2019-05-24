@@ -8,11 +8,13 @@ return [
     'Unban' => 'Разбанить',
     'Search' => 'Поиск',
     'View' => 'Информация',
+    'Cancel' => 'Отменить',
+    'Back' => 'Назад',
 
-    'Create {modelClass}' => 'Создать {modelClass}',
-    'Update {modelClass}' => 'Обновить {modelClass}',
-    'Delete {modelClass}' => 'Удалить {modelClass}',
-    'Account {model}' => 'Личный кабинет: {model}',
+    'Create: {modelClass}' => 'Создать {modelClass}',
+    'Update: {modelClass}' => 'Редактировать: {modelClass}',
+    'Delete: {modelClass}' => 'Удалить {modelClass}',
+    'Account: {modelClass}' => 'Личный кабинет: {modelClass}',
 
     // Разделы
     'Bans' => 'Банлист',

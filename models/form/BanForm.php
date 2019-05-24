@@ -3,6 +3,8 @@
 namespace app\models\form;
 
 use app\models\Ban;
+use app\services\BanService;
+use Yii;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -21,6 +23,11 @@ class BanForm extends Ban
     public $until;
 
     /**
+     * @var BanService
+     */
+    private $banService;
+
+    /**
      * {@inheritDoc}
      */
     public function __construct(Ban $ban, $config = [])
@@ -34,21 +41,8 @@ class BanForm extends Ban
      */
     public function init()
     {
-        switch ($this->ban->ban_length) {
-            case 0:
-                $until = Ban::FOREVER;
-                break;
-            case -1:
-                $until = Ban::UNBANNED;
-                break;
-            default:
-                $until = $this->ban->ban_created + $this->ban->ban_length * 60;
-                if ($until < time()) {
-                    $until = Ban::EXPIRED;
-                }
-        }
-        $this->until = $until;
-
+        $this->banService = Yii::$container->get(BanService::class);
+        $this->until = BanService::getExpireData($this->ban);
         parent::init();
     }
 
@@ -58,14 +52,10 @@ class BanForm extends Ban
     public function load($data, $formName = null)
     {
         if (isset($data['BanForm'])) {
-            $until = strtotime($data['BanForm']['until']);
+            $until = $this->banService->calculateBanLength($this->ban, $data['BanForm']['until']);
 
             if ($until) {
-                $this->ban->ban_length = abs(
-                    round(
-                        (strtotime($data['BanForm']['until']) - $this->ban->ban_created) / 60
-                    )
-                );
+                $this->ban->ban_length = $until;
             }
         }
         if (isset($data['Ban'])) {

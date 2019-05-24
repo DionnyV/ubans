@@ -18,7 +18,7 @@ class UserUpdateForm extends User
      */
     public function __construct(User $user, $config = [])
     {
-        $this->userForm = new UserCreateForm($user);
+        $this->userForm = new UserForm($user);
         $this->privilegesForm = new UserPrivilegesForm($user);
         parent::__construct($config);
     }

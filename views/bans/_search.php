@@ -15,9 +15,6 @@ use yii\bootstrap4\ActiveForm;
         <?php $form = ActiveForm::begin([
             'action' => ['index'],
             'method' => 'get',
-            'options' => [
-                'data-pjax' => 1
-            ],
         ]); ?>
 
         <?= $form->field($model, 'player_ip') ?>

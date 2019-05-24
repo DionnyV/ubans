@@ -3,6 +3,7 @@
 namespace app\services;
 
 use app\models\Access;
+use app\models\form\UserForm;
 use app\models\Server;
 use app\models\User;
 use DateTime;
@@ -16,19 +17,29 @@ use yii\helpers\ArrayHelper;
 class UserService
 {
     /**
-     * Находит пользователя по идентификатору.
+     * Возвращает пользователя по идентификатору.
      *
      * @param $id
      * @return User
      * @throws Exception
      */
-    public function findById($id): User
+    public function getById($id): User
     {
         $model = User::findOne(['id' => $id, 'is_deleted' => false]);
         if ($model === null) {
             throw new Exception('Пользователь не найден.');
         }
         return $model;
+    }
+
+    /**
+     * Создает пользователя.
+     *
+     * @param UserForm $form
+     */
+    public function create(UserForm $form): void
+    {
+        $form->save();
     }
 
     /**
@@ -39,13 +50,13 @@ class UserService
      * @throws Exception
      * @throws \Throwable
      */
-    public function delete(User $user, $id): void
+    public function delete(User $user): void
     {
-        if (Yii::$app->user->id == $id) {
+        if (Yii::$app->user->id == $user->id) {
             throw new Exception('Нельзя удалить текущий аккаунт.');
         }
-        $user->is_deleted = true;
-        $user->save();
+
+        $user->delete();
 
         foreach ($user->access as $access) {
             $this->deleteAccess($access);

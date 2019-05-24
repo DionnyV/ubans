@@ -2,14 +2,17 @@
 
 namespace app\controllers;
 
-use app\models\Access;
 use app\models\form\UserUpdateForm;
-use app\models\form\UserCreateForm;
+use app\models\form\UserForm;
+use app\models\User;
 use app\services\ServerService;
 use app\services\UserService;
+use Exception;
+use Throwable;
 use Yii;
 use app\models\search\UserSearch;
 use yii\bootstrap4\ActiveForm;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -88,7 +91,7 @@ class UsersController extends Controller
      */
     public function actionCreate()
     {
-        $form = new UserCreateForm();
+        $form = new UserForm();
 
         if (Yii::$app->request->isAjax && $form->load(Yii::$app->request->post())) {
             Yii::$app->response->format = Response::FORMAT_JSON;
@@ -96,7 +99,7 @@ class UsersController extends Controller
         }
 
         if ($form->load(Yii::$app->request->post()) && $form->validate()) {
-            $form->save();
+            $this->userService->create($form);
             return $this->redirect(['update', 'id' => $form->user->id]);
         }
 
@@ -109,12 +112,11 @@ class UsersController extends Controller
      * Обновляет пользователя.
      * @param integer $id
      * @return mixed
-     * @throws NotFoundHttpException
-     * @throws \Exception
+     * @throws Exception
      */
     public function actionUpdate($id)
     {
-        $form = new UserUpdateForm($this->userService->findById($id));
+        $form = new UserUpdateForm($this->findModel($id));
 
         if (Yii::$app->request->isAjax && $form->load(Yii::$app->request->post())) {
             Yii::$app->response->format = Response::FORMAT_JSON;
@@ -135,15 +137,15 @@ class UsersController extends Controller
      * Удаляет пользователя.
      * @param integer $id
      * @return mixed
+     * @throws Throwable
      * @throws UnprocessableEntityHttpException
-     * @throws \Throwable
      */
     public function actionDelete($id)
     {
         try {
-            $user = $this->userService->findById($id);
-            $this->userService->delete($user, $id);
-        } catch (\Exception $e) {
+            $user = $this->findModel($id);
+            $this->userService->delete($user);
+        } catch (Exception $e) {
             throw new UnprocessableEntityHttpException($e->getMessage());
         }
         return $this->redirect('index');
@@ -154,20 +156,36 @@ class UsersController extends Controller
      *
      * @param $userId
      * @param $serverId
-     * @return int
-     * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @return void
+     * @throws Throwable
+     * @throws UnprocessableEntityHttpException
      */
     public function actionDeletePrivilege($userId, $serverId)
     {
         try {
-            $user = $this->userService->findById($userId);
+            $user = $this->findModel($userId);
             $server = $this->serverService->findById($serverId);
             $this->userService->deleteAccess(
                 $this->userService->findAccess($user, $server)
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new UnprocessableEntityHttpException($e->getMessage());
+        }
+    }
+
+    /**
+     * Находит модель по идентификатору.
+     *
+     * @param integer $id
+     * @return User
+     * @throws NotFoundHttpException
+     */
+    protected function findModel($id)
+    {
+        try {
+            return $this->userService->getById($id);
+        } catch (Exception $e) {
+            throw new NotFoundHttpException('Пользователь не найден.');
         }
     }
 }

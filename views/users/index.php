@@ -1,5 +1,6 @@
 <?php
 
+use app\models\User;
 use yii\bootstrap4\Html;
 use yii\grid\GridView;
 
@@ -16,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <p>
-        <?= Html::a(Yii::t('app', 'Create'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Create'), ['create'], ['class' => 'btn btn-dark']) ?>
     </p>
 
     <?= GridView::widget([
@@ -28,8 +29,14 @@ $this->params['breadcrumbs'][] = $this->title;
             'nickname',
             [
                 'attribute' => 'flags',
-                'value' => function ($data) use ($userService) {
+                'value' => function (User $data) use ($userService) {
                     return $userService->formatAccountFlagsString($data);
+                },
+            ],
+            [
+                'attribute' => 'status',
+                'value' => function (User $data) {
+                    return User::getStatusLabels()[$data->status];
                 },
             ],
         ],

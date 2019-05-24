@@ -97,7 +97,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['email', 'username', 'nickname'], 'required'],
+            [['email', 'username', 'nickname', 'auth_key'], 'required'],
             ['password', 'required', 'on' => self::SCENARIO_CREATE],
             ['password', 'string', 'min' => 6],
             [['email', 'password', 'password_reset_token'], 'string', 'max' => 255],

@@ -71,11 +71,10 @@ $banActive = BanService::isActive($model);
     <?php if (Yii::$app->user->can('manageBans')) : ?>
         <div class="form-group text-right">
             <?php if ($banActive) : ?>
-                <a class="btn btn-light" href="<?= \yii\helpers\Url::to(['bans/unban', 'id' => $model->id])?>"
-                   role="button">Разбанить</a>
+                <?= Html::a(Yii::t('app', 'Unban'), ['unban', 'id' => $model->id], ['class' => 'btn btn-light']) ?>
             <?php endif; ?>
-            <a class="btn btn-dark" href="<?= \yii\helpers\Url::to(['bans/update', 'id' => $model->id])?>"
-               role="button">Редактировать</a>
+            <?= Html::a(Yii::t('app', 'Back'), ['index'], ['class' => 'btn btn-secondary']) ?>
+            <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-dark']) ?>
         </div>
     <?php endif; ?>
 </div>
