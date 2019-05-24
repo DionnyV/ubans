@@ -1,0 +1,66 @@
+<?php
+
+use app\models\Ban;
+use app\services\BanService;
+use yii\bootstrap4\Html;
+use yii\grid\GridView;
+use yii\widgets\Pjax;
+
+/* @var $this yii\web\View */
+/* @var $searchModel app\models\search\BanSearch */
+/* @var $dataProvider yii\data\ActiveDataProvider */
+
+$this->title = Yii::t('app', 'Bans');
+$this->params['breadcrumbs'][] = $this->title;
+?>
+<div class="bans-index">
+    <h2><?= Html::encode($this->title) ?></h2>
+    <?php Pjax::begin(); ?>
+    <?php echo $this->render('_search', ['model' => $searchModel]); ?>
+
+    <?= GridView::widget([
+        'layout' => '{items}{pager}',
+        'dataProvider' => $dataProvider,
+        'rowOptions' => function ($model, $key, $index, $grid) {
+            if (!BanService::isActive($model)) {
+                return ['class' => 'table-secondary'];
+            }
+        },
+        'columns' => [
+            [
+                'attribute' => 'ban_created',
+                'format' => ['date', 'php:d.m.Y']
+            ],
+            'player_nick',
+            'admin_nick',
+            'ban_reason',
+            [
+                    'attribute' => 'expired',
+                    'label' => 'Истекает',
+                    'value' => function (Ban $data) {
+                        return BanService::getExpireData($data);
+                    }
+            ],
+        ],
+        'tableOptions' => ['class' => 'table table-borderless table-striped table-responsive-md'],
+        'summary' => null,
+        'pager' => [
+            'options'=>['class'=>'pagination justify-content-center'],
+            'prevPageCssClass' => 'page-item',
+            'pageCssClass' => 'page-item',
+            'nextPageCssClass' => 'page-item',
+            'linkOptions' => ['class' => 'page-link'],
+            'disabledListItemSubTagOptions' => ['tag' => 'a', 'class' => 'page-link']
+        ],
+    ]); ?>
+    <?php Pjax::end(); ?>
+</div>
+<?php
+$this->registerJs(
+    '$(function(){
+            $("tr").on("click", function(){
+                var banId = $(this).attr("data-key");
+                document.location.href = "' . \yii\helpers\Url::to(['bans/view']) . '?id=" + banId;
+            });
+    });'
+);
