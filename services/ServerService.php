@@ -102,7 +102,11 @@ class ServerService
     public function getOnline(Server $server)
     {
         $info = $this->getInfo($server);
-        return $info['Players'] . '/' . $info['MaxPlayers'];
+
+        if ($info) {
+            return $info['Players'] . '/' . $info['MaxPlayers'];
+        }
+        return 'Нет информации.';
     }
 
     /**
@@ -127,16 +131,19 @@ class ServerService
     /**
      * Возвращает кол-во игроков в процентах.
      * @param Server $server
-     * @return float
+     * @return int
      * @throws InvalidArgumentException
      * @throws InvalidPacketException
      * @throws TimeoutException
      */
-    private function getOnlineInPercents(Server $server)
+    private function getOnlineInPercents(Server $server): int
     {
         $info = $this->getInfo($server);
 
-        return round($info['Players'] * 100 / $info['MaxPlayers']);
+        if ($info) {
+            return round($info['Players'] * 100 / $info['MaxPlayers']);
+        }
+        return 0;
     }
 
     /**
