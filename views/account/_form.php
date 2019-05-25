@@ -4,6 +4,7 @@ use app\models\form\AccountForm;
 use app\models\User;
 use yii\bootstrap4\Html;
 use yii\bootstrap4\ActiveForm;
+use yii\helpers\Url;
 use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
@@ -22,7 +23,7 @@ $user = $model->user;
     <?= $form->errorSummary($user) ?>
 
     <div class="card-deck mb-3">
-        <div class="card" style="max-width: 600px;">
+        <div class="card">
             <div class="card-header">
                 Сайт:
             </div>
@@ -32,16 +33,16 @@ $user = $model->user;
 
                     <label for="unique-url">Ваша уникальная ссылка</label>
                     <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><?= Yii::$app->request->hostInfo ?>/</span>
-                        </div>
-                        <input type="text" class="form-control" name="auth_key" value="<?= $user->auth_key ?>" disabled>
+                        <input type="text" class="form-control" name="auth_key"
+                               onclick="this.select()"
+                               data-url="<?= Yii::$app->request->hostInfo . Url::to(['site/auth', 'code' => '']) ?>"
+                               value="<?= Yii::$app->request->hostInfo . Url::to(['site/auth', 'code' => $user->auth_key]) ?>"
+                               readonly>
                         <div class="input-group-append">
                             <span class="input-group-text" onclick="Account.generateAuthKey()">#</span>
                         </div>
                     </div>
                     <?= $form->field($user, 'auth_key')->hiddenInput()->label(false); ?>
-                    <hr>
                     <?= $form->field($user, 'nickname')->textInput(['maxlength' => true]) ?>
                     <?= $form->field($user, 'steamid')->textInput(['maxlength' => true]) ?>
                     <?= $form->field($user, 'password')->textInput(['maxlength' => true]) ?>
@@ -67,8 +68,9 @@ $user = $model->user;
         </div>
     </div>
 
-    <div class="form-group">
-        <?= Html::submitButton(Yii::t('app', 'Update'), ['class' => 'btn btn-success']) ?>
+    <div class="form-group text-right">
+        <?= Html::a(Yii::t('app', 'Cancel'), ['site/index'], ['class' => 'btn btn-light']) ?>
+        <?= Html::submitButton(Yii::t('app', 'Update'), ['class' => 'btn btn-dark']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
@@ -78,8 +80,8 @@ $user = $model->user;
     var Account = {
         generateAuthKey: function () {
             var randomKey = Math.random().toString(36).substr(2) + '_' + Math.random().toString(36).substr(2);
-
-            $("input[name='auth_key'").val(randomKey);
+            var prepentUrl =  $("input[name='auth_key'").attr("data-url");
+            $("input[name='auth_key'").val(prepentUrl + randomKey);
             $("input[name='User[auth_key]'").val(randomKey);
         }
     }

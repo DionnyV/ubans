@@ -23,6 +23,11 @@ class AccountForm extends Ban
     public $privileges;
 
     /**
+     * @var array - параметры которые можно менять, изменение остальных отметаем.
+     */
+    private $allowedParams = ['nickname', 'auth_key', 'steamid', 'password'];
+
+    /**
      * {@inheritDoc}
      */
     public function __construct(IdentityInterface $user, $config = [])
@@ -39,12 +44,13 @@ class AccountForm extends Ban
     public function load($data, $formName = null)
     {
         if (isset($data['User'])) {
-            $params = ['email', 'username', 'flags', 'status'];
-            foreach ($params as $param) {
-                if (isset($data['User'][$param])) {
-                    unset($data['User'][$param]);
+            $tempParams = [];
+            foreach ($data['User'] as $param => $value) {
+                if (in_array($param, $this->allowedParams)) {
+                    $tempParams[$param] = $value;
                 }
             }
+            $data['User'] = $tempParams;
         }
         return $this->user->load($data, $formName);
     }

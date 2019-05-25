@@ -10,11 +10,13 @@ return [
     'View' => 'Информация',
     'Cancel' => 'Отменить',
     'Back' => 'Назад',
+    'Login' => 'Войти',
+    'Signup' => 'Зарегистрироваться',
 
-    'Create: {modelClass}' => 'Создать {modelClass}',
+    'Create: {modelClass}' => 'Создать: {modelClass}',
     'Update: {modelClass}' => 'Редактировать: {modelClass}',
     'Delete: {modelClass}' => 'Удалить {modelClass}',
-    'Account: {modelClass}' => 'Личный кабинет: {modelClass}',
+    'Account: {name}' => 'Личный кабинет: {name}',
 
     // Разделы
     'Bans' => 'Банлист',

@@ -5,7 +5,7 @@ use yii\bootstrap4\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\form\AccountForm*/
 
-$this->title = Yii::t('app', 'Account {name}', [
+$this->title = Yii::t('app', 'Account: {name}', [
     'name' => $model->user->username,
 ]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Account'), 'url' => 'index'];

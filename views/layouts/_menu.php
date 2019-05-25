@@ -19,8 +19,8 @@ if (Yii::$app->user->can('manageSettings')) {
 }
 
 if (Yii::$app->user->isGuest) {
-    $items[] = ['label' => 'Signup', 'url' => ['/site/signup']];
-    $items[] = ['label' => 'Login', 'url' => ['/site/login']];
+    $items[] = ['label' => Yii::t('app', 'Signup'), 'url' => ['/site/signup']];
+    $items[] = ['label' => Yii::t('app', 'Login'), 'url' => ['/site/login']];
 } else {
     $items[] = '<li>'
         . Html::beginForm(['/site/logout'], 'post')
