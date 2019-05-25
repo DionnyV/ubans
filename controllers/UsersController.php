@@ -98,9 +98,8 @@ class UsersController extends Controller
             return ActiveForm::validate($form);
         }
 
-        if ($form->load(Yii::$app->request->post()) && $form->validate()) {
-            $this->userService->create($form);
-            return $this->redirect(['update', 'id' => $form->user->id]);
+        if ($form->load(Yii::$app->request->post()) && $form->save()) {
+            return $this->redirect(['index']);
         }
 
         return $this->render('create', [
@@ -116,15 +115,14 @@ class UsersController extends Controller
      */
     public function actionUpdate($id)
     {
-        $form = new UserUpdateForm($this->findModel($id));
+        $form = new UserForm($this->findModel($id));
 
         if (Yii::$app->request->isAjax && $form->load(Yii::$app->request->post())) {
             Yii::$app->response->format = Response::FORMAT_JSON;
             return ActiveForm::validate($form);
         }
 
-        if ($form->load(Yii::$app->request->post()) && $form->validate()) {
-            $form->save();
+        if ($form->load(Yii::$app->request->post()) && $form->save()) {
             return $this->redirect(['index']);
         }
 
