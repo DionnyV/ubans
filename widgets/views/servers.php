@@ -5,9 +5,9 @@
     <div class="card-body">
         <?php foreach ($servers as $server) : ?>
             <p class="mb-2">
-                <h5 class="card-title"><?= $server['hostname'] ?></h5>
-                <h6 class="card-subtitle mb-2 text-muted"><?= $server['ip'] ?></h6>
-                <div class="progress" style="height: 25px; position: relative;">
+            <h5 class="card-title"><?= $server['hostname'] ?></h5>
+            <h6 class="card-subtitle mb-2 text-muted"><?= $server['ip'] ?></h6>
+            <div class="progress" style="height: 25px; position: relative;">
                     <span style="position: absolute; line-height: 25px; width: 100%; text-align: center;">
                         <?= $server['online'] ?>
                     </span>

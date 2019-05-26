@@ -15,7 +15,9 @@ if (Yii::$app->user->can('manageContent')) {
     $items[] = ['label' => Yii::t('app', 'Servers'), 'url' => Url::toRoute(['servers/index'])];
 }
 if (Yii::$app->user->can('manageSettings')) {
-    $items[] = ['label' => Yii::t('app', 'Privileges'), 'url' => Url::toRoute(['privileges/index'])];
+    $items[] = ['label' => Yii::t('app', 'Settings'), 'items' => [
+        ['label' => Yii::t('app', 'Privileges'), 'url' => Url::toRoute(['privileges/index'])],
+    ]];
 }
 
 if (Yii::$app->user->isGuest) {

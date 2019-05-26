@@ -24,4 +24,5 @@ return [
     'Servers' => 'Сервера',
     'Privileges' => 'Привилегии',
     'Account' => 'Личный кабинет',
+    'Settings' => 'Настройки',
 ];

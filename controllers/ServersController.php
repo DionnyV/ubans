@@ -68,16 +68,19 @@ class ServersController extends Controller
      *
      * @param integer $id
      * @return mixed
+     * @throws InvalidArgumentException
+     * @throws InvalidPacketException
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws TimeoutException
      */
     public function actionView($id)
     {
-        //$this->serverService->getOnline($this->findModel($id));
+        $info = $this->serverService->getInfo($this->findModel($id));
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'info' => $info
         ]);
     }
-
 
     /**
      * Удаляет сервер.

@@ -2,7 +2,6 @@
 
 use app\models\Ban;
 use app\services\BanService;
-use yii\bootstrap4\Html;
 use yii\grid\GridView;
 use yii\helpers\Url;
 use yii\widgets\Pjax;
@@ -15,7 +14,6 @@ $this->title = Yii::t('app', 'Bans');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="bans-index">
-    <h2><?= Html::encode($this->title) ?></h2>
     <?php Pjax::begin(); ?>
     <?php echo $this->render('_search', ['model' => $searchModel]); ?>
 
