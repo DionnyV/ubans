@@ -6,6 +6,7 @@ use yii\helpers\Html;
 /* @var $model app\models\Privilege */
 
 $this->title = Yii::t('app', 'Create Privilege');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Settings')];
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Privileges'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

@@ -1,29 +1,30 @@
 <?php
 
 use app\models\Privilege;
-use app\models\Server;
 use yii\helpers\Html;
 use yii\grid\GridView;
-use yii\widgets\Pjax;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\search\PrivilegeSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('app', 'Privileges');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Settings')];
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
 <div class="privilege-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php Pjax::begin(); ?>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Create'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Create'), ['create'], ['class' => 'btn btn-dark']) ?>
     </p>
 
     <?= GridView::widget([
+        'id' => 'privileges',
+        'layout' => '{items}{pager}',
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
@@ -36,23 +37,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
             ],
             'access_flags',
-            [
-                'class' => 'yii\grid\ActionColumn',
-                'template' => '{update} {delete}',
-                'buttons' => [
-                    'update' => function ($url, $model) {
-                        return \yii\bootstrap4\Html::a('Ред.', $url, [
-                            'title' => 'Редактировать',
-                        ]);
-                    },
-                    'delete' => function ($url, $model) {
-                        return Html::a('Del.', $url, [
-                            'title' => 'Удалить',
-                        ]);
-                    },
-                ],
-            ],
         ],
     ]); ?>
-    <?php Pjax::end(); ?>
+
 </div>
+<?php
+$this->registerJs(
+    '$(function(){
+            $("#privileges tbody").on("click", "tr", function(){
+                var id = $(this).attr("data-key");
+                document.location.href = "' . Url::to(['privileges/update']) . '?id=" + id;
+            });
+    });'
+);

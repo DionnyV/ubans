@@ -66,6 +66,7 @@ class ServerService
 
     /**
      * Возвращает список привилегий сервера.
+     *
      * @param Server $server
      * @return array
      */
@@ -80,6 +81,7 @@ class ServerService
 
     /**
      * Возвращает список серверов.
+     *
      * @return array
      */
     public static function getServersList()
@@ -93,6 +95,7 @@ class ServerService
 
     /**
      * Возвращает онлайн сервера.
+     *
      * @param Server $server
      * @return string
      * @throws InvalidArgumentException
@@ -111,6 +114,7 @@ class ServerService
 
     /**
      * Возвращает информацию о сервере.
+     *
      * @param Server $server
      * @return array|bool
      * @throws InvalidArgumentException
@@ -133,6 +137,7 @@ class ServerService
 
     /**
      * Возвращает кол-во игроков в процентах.
+     *
      * @param Server $server
      * @return int
      * @throws InvalidArgumentException
@@ -151,6 +156,7 @@ class ServerService
 
     /**
      * Возвращает IP адрес сервера.
+     *
      * @param Server $server
      * @return mixed
      */
@@ -161,6 +167,7 @@ class ServerService
 
     /**
      * Возвращает порт сервера.
+     *
      * @param Server $server
      * @return mixed
      */

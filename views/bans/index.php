@@ -14,7 +14,6 @@ $this->title = Yii::t('app', 'Bans');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="bans-index">
-    <?php Pjax::begin(); ?>
     <?php echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
@@ -53,14 +52,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'disabledListItemSubTagOptions' => ['tag' => 'a', 'class' => 'page-link']
         ],
     ]); ?>
-    <?php Pjax::end(); ?>
 </div>
 <?php
 $this->registerJs(
     '$(function(){
-            $("#bans").on("click", "tr", function(){
-                var banId = $(this).attr("data-key");
-                document.location.href = "' . Url::to(['bans/view']) . '?id=" + banId;
+            $("#bans tbody").on("click", "tr", function(){
+                var id = $(this).attr("data-key");
+                document.location.href = "' . Url::to(['bans/view']) . '?id=" + id;
             });
     });'
 );

@@ -14,7 +14,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="servers-index">
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php Pjax::begin(); ?>
 
     <?= GridView::widget([
         'layout' => '{items}',
@@ -27,14 +26,13 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
         'pager' => false
     ]); ?>
-    <?php Pjax::end(); ?>
 </div>
 <?php
 $this->registerJs(
     '$(function(){
-            $("#servers").on("click", "tr", function(){
-                var serverId = $(this).attr("data-key");
-                document.location.href = "' . Url::to(['servers/view']) . '?id=" + serverId;
+            $("#servers tbody").on("click", "tr", function(){
+                var id = $(this).attr("data-key");
+                document.location.href = "' . Url::to(['servers/view']) . '?id=" + id;
             });
     });'
 );

@@ -8,6 +8,7 @@ use yii\helpers\Html;
 $this->title = Yii::t('app', 'Update: {name}', [
     'name' => $model->name,
 ]);
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Settings')];
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Privileges'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>

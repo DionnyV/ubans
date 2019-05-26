@@ -21,6 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </p>
 
     <?= GridView::widget([
+        'id' => 'users',
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
@@ -45,9 +46,9 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
 $this->registerJs(
     '$(function(){
-            $("tr").on("click", function(){
-                var banId = $(this).attr("data-key");
-                document.location.href = "' . \yii\helpers\Url::to(['users/update']) . '?id=" + banId;
+            $("#users tbody").on("click", "tr", function(){
+                var id = $(this).attr("data-key");
+                document.location.href = "' . \yii\helpers\Url::to(['users/update']) . '?id=" + id;
             });
     });'
 );
