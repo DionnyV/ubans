@@ -9,6 +9,7 @@ use xPaw\SourceQuery\Exception\InvalidPacketException;
 use xPaw\SourceQuery\Exception\TimeoutException;
 use Yii;
 use app\models\Server;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -29,10 +30,14 @@ class ServersController extends Controller
     public function behaviors()
     {
         return [
-            'verbs' => [
-                'class' => VerbFilter::class,
-                'actions' => [
-                    'delete' => ['POST'],
+            'access' => [
+                'class' => AccessControl::class,
+                'except' => ['index', 'view'],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['manageSettings'],
+                    ]
                 ],
             ],
         ];
@@ -43,8 +48,8 @@ class ServersController extends Controller
      */
     public function __construct($id, $module, ServerService $serverService, $config = [])
     {
-        parent::__construct($id, $module, $config);
         $this->serverService = $serverService;
+        parent::__construct($id, $module, $config);
     }
 
     /**
@@ -107,10 +112,10 @@ class ServersController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Server::findOne($id)) !== null) {
-            return $model;
+        try {
+            return $this->serverService->findById($id);
+        } catch (\Exception $e) {
+            throw new NotFoundHttpException('Сервер не найден.');
         }
-
-        throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
     }
 }

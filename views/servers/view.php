@@ -5,6 +5,7 @@ use yii\web\YiiAsset;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Server */
+/* @var $info array */
 
 $this->title = Yii::t('app', '{name}', [
     'name' => $model->hostname,
@@ -28,8 +29,11 @@ $playersCount = 0;
                 </p>
                 <div class="progress" style="height: 25px; position: relative;">
                     <span style="position: absolute; line-height: 25px; width: 100%; text-align: center;">
-                        <?= Html::encode($info['Players']) ?> /
-                        <?= Html::encode($info['MaxPlayers']) ?>
+                        <?php if (isset($info['Players'])) : ?>
+                            <?= Html::encode($info['Players']) . '/' . Html::encode($info['MaxPlayers']) ?>
+                        <?php else : ?>
+                            Нет информации.
+                        <?php endif; ?>
                     </span>
                     <div class="progress-bar progress-bar-striped <?php
                     if ($info['OnlineInPercents'] <= 50) {
@@ -64,17 +68,27 @@ $playersCount = 0;
                 </tr>
                 </thead>
                 <tbody>
-                <?php foreach ($info['PlayersInfo'] as $player) : ?>
+                <?php if (isset($info['PlayersInfo'])) : ?>
+                    <?php foreach ($info['PlayersInfo'] as $player) : ?>
+                        <tr>
+                            <th scope="row"><?= ++$playersCount ?></th>
+                            <td><?= Html::encode($player['Name']) ?></td>
+                            <td><?= Html::encode($player['Frags']) ?></td>
+                            <td><?= Html::encode($player['TimeF']) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else : ?>
                     <tr>
-                        <th scope="row"><?= ++$playersCount ?></th>
-                        <td><?= $player['Name'] ?></td>
-                        <td><?= $player['Frags'] ?></td>
-                        <td><?= $player['TimeF'] ?></td>
+                        <td class="text-center" colspan="4">Нет информации.</td>
                     </tr>
-                <?php endforeach; ?>
+                <?php endif; ?>
                 </tbody>
                 </table>
             </div>
         </div>
+    </div>
+    <div class="form-group text-right mt-3">
+        <?= Html::a(Yii::t('app', 'Back'), ['index'], ['class' => 'btn btn-dark']) ?>
+        <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], ['class' => 'btn btn-warning']) ?>
     </div>
 </div>

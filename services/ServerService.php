@@ -21,6 +21,9 @@ class ServerService
     private $sourceQuery;
     private $serversInfo = [];
 
+    /**
+     * {@inheritDoc}
+     */
     public function __construct(SourceQuery $sourceQuery)
     {
         $this->sourceQuery = $sourceQuery;

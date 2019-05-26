@@ -11,9 +11,8 @@ $items[] = Yii::$app->user->can('manageUsers')
     ? ['label' => Yii::t('app', 'Users'), 'url' => Url::toRoute(['users/index'])]
     : ['label' => Yii::t('app', 'Account'), 'url' => Url::toRoute(['account/index'])];
 
-if (Yii::$app->user->can('manageContent')) {
-    $items[] = ['label' => Yii::t('app', 'Servers'), 'url' => Url::toRoute(['servers/index'])];
-}
+$items[] = ['label' => Yii::t('app', 'Servers'), 'url' => Url::toRoute(['servers/index'])];
+
 if (Yii::$app->user->can('manageSettings')) {
     $items[] = ['label' => Yii::t('app', 'Settings'), 'items' => [
         ['label' => Yii::t('app', 'Privileges'), 'url' => Url::toRoute(['privileges/index'])],
