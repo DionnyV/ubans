@@ -2,9 +2,7 @@
 
 /* @var $this yii\web\View */
 /* @var $form yii\bootstrap4\ActiveForm */
-/* @var $model PasswordResetRequestForm */
 
-use frontend\models\form\PasswordResetRequestForm;
 use yii\helpers\Html;
 use yii\bootstrap4\ActiveForm;
 
@@ -14,7 +12,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="site-request-password-reset">
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>Пожалуйста, заполните вашу электронную почту. На нее будет отправлена ссылка для сброса пароля.</p>
+    <p>Введите вашу электронную почту. На нее будет отправлена ссылка для сброса пароля.</p>
 
     <div class="row">
         <div class="col-lg-5">

@@ -27,8 +27,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 <div style="color:#999;margin:1em 0">
                     Забыли пароль? <?= Html::a('Восстановить', ['site/request-password-reset']) ?>.
-                    <br>
-                    Необходимо новое письмо с подтверждением? <?= Html::a('Переслать', ['site/resend-verification-email']) ?>
                 </div>
 
                 <div class="form-group">

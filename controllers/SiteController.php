@@ -136,28 +136,6 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
-
-    /**
-     * Регистрация.
-     * @return mixed
-     * @throws \yii\base\Exception
-     */
-    public function actionSignup()
-    {
-        $this->layout = 'unauthorized';
-
-        $model = new SignupForm();
-        if ($model->load(Yii::$app->request->post()) && $model->signup()) {
-            Yii::$app->session->setFlash('success', 'Спасибо за регистрацию.' .
-                ' Пожалуйста, проверьте свой почтовый ящик для подтверждения по электронной почте.');
-            return $this->goHome();
-        }
-
-        return $this->render('signup', [
-            'model' => $model,
-        ]);
-    }
-
     /**
      * Запрос на сброс пароля.
      *
@@ -165,8 +143,6 @@ class SiteController extends Controller
      */
     public function actionRequestPasswordReset()
     {
-        $this->layout = 'unauthorized';
-
         $model = new PasswordResetRequestForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
@@ -200,8 +176,6 @@ class SiteController extends Controller
      */
     public function actionResetPassword($token)
     {
-        $this->layout = 'unauthorized';
-
         try {
             $model = new ResetPasswordForm($token);
         } catch (InvalidParamException $e) {
@@ -216,59 +190,6 @@ class SiteController extends Controller
 
         return $this->render('resetPassword', [
             'model' => $model,
-        ]);
-    }
-
-    /**
-     * Подтверждение электронной почты.
-     *
-     * @param string $token
-     * @throws BadRequestHttpException
-     * @return yii\web\Response
-     */
-    public function actionVerifyEmail($token)
-    {
-        $this->layout = 'unauthorized';
-
-        try {
-            $model = new VerifyEmailForm($token);
-        } catch (InvalidArgumentException $e) {
-            throw new BadRequestHttpException($e->getMessage());
-        }
-        if ($user = $model->verifyEmail()) {
-            if (Yii::$app->user->login($user)) {
-                Yii::$app->session->setFlash('success', 'Ваш почтовый ящик был подтвержден!');
-                return $this->goHome();
-            }
-        }
-
-        Yii::$app->session->setFlash('error', 'К сожалению, мы не можем подтвердить ваш аккаунт с помощью предоставленного токена.');
-        return $this->goHome();
-    }
-
-    /**
-     * Восстановление доступа.
-     *
-     * @return mixed
-     */
-    public function actionResendVerificationEmail()
-    {
-        $this->layout = 'unauthorized';
-
-        $model = new ResendVerificationEmailForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail()) {
-                Yii::$app->session->setFlash('success', 'Проверьте свою электронную почту для дальнейших инструкций.');
-                return $this->goHome();
-            }
-            Yii::$app->session->setFlash(
-                'error',
-                'К сожалению, мы не можем переслать подтверждающее письмо на указанный адрес электронной почты.'
-            );
-        }
-
-        return $this->render('resendVerificationEmail', [
-            'model' => $model
         ]);
     }
 

@@ -128,8 +128,10 @@ class ServerService
             $port = $this->getPort($server);
             $this->sourceQuery->Connect($ip, $port, 1, $this->sourceQuery::GOLDSOURCE);
             $this->serversInfo[$server->id] = $this->sourceQuery->GetInfo();
-            $this->serversInfo[$server->id]['PlayersInfo'] = $this->sourceQuery->GetPlayers();
-            $this->serversInfo[$server->id]['OnlineInPercents'] = $this->getOnlineInPercents($server);
+            if ($this->serversInfo[$server->id]) {
+                $this->serversInfo[$server->id]['PlayersInfo'] = $this->sourceQuery->GetPlayers();
+                $this->serversInfo[$server->id]['OnlineInPercents'] = $this->getOnlineInPercents($server);
+            }
             $this->sourceQuery->Disconnect();
         }
         return $this->serversInfo[$server->id];
