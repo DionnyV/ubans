@@ -21,6 +21,7 @@ class m190411_222845_create_servers_table extends Migration
             'timestamp' => $this->integer()->defaultValue(null),
             'hostname' => $this->string(100)->defaultValue('Unknown')->comment('Название'),
             'address' => $this->string(100)->defaultValue(null)->comment('IP адресс'),
+            'description' => $this->text()->defaultValue(null)->comment('Описание'),
             'gametype' => $this->string(32)->defaultValue(null),
             'rcon' => $this->string(32)->defaultValue(null),
             'amxban_version' => $this->string(32)->defaultValue(null),

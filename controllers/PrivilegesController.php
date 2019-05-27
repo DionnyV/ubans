@@ -5,10 +5,10 @@ namespace app\controllers;
 use Yii;
 use app\models\Privilege;
 use app\models\search\PrivilegeSearch;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * Контроллер привилегий на серверах.
@@ -21,12 +21,6 @@ class PrivilegesController extends Controller
     public function behaviors()
     {
         return [
-            'verbs' => [
-                'class' => VerbFilter::class,
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
             'access' => [
                 'class' => AccessControl::class,
                 'rules' => [
@@ -98,9 +92,9 @@ class PrivilegesController extends Controller
      *
      * @param integer $id
      * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
+     * @throws NotFoundHttpException
+     * @throws StaleObjectException
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -113,8 +107,8 @@ class PrivilegesController extends Controller
      * Находит привилегию по идентификатору.
      *
      * @param integer $id
-     * @return Privilege the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
+     * @return Privilege
+     * @throws NotFoundHttpException
      */
     protected function findModel($id)
     {

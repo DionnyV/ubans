@@ -17,7 +17,7 @@ return [
         'description' => 'Управление настройками',
     ],
     'user' => [
-        'type' => 1
+        'type' => 1,
     ],
     'editor' => [
         'type' => 1,

@@ -19,8 +19,12 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'access_flags')->textInput(['maxlength' => true]) ?>
 
-    <div class="form-group">
-        <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
+    <div class="form-group text-right">
+        <?= Html::a(Yii::t('app', 'Cancel'), ['index'], ['class' => 'btn btn-light']) ?>
+        <?php if (!$model->isNewRecord) : ?>
+            <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], ['class' => 'btn btn-warning']) ?>
+        <?php endif; ?>
+        <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-dark']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
