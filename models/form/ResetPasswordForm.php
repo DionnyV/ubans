@@ -10,6 +10,9 @@ use app\models\User;
  */
 class ResetPasswordForm extends Model
 {
+    /**
+     * @var string пароль.
+     */
     public $password;
 
     /**

@@ -21,17 +21,17 @@ class UserForm extends User
     public $user;
 
     /**
-     * @var string
+     * @var string основной флаг доступа.
      */
     public $flag;
 
     /**
-     * @var string
+     * @var string опции доступа.
      */
     public $options;
 
     /**
-     * @var string
+     * @var string роль.
      */
     public $role;
 

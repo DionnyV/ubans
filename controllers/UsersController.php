@@ -2,7 +2,6 @@
 
 namespace app\controllers;
 
-use app\models\form\UserUpdateForm;
 use app\models\form\UserForm;
 use app\models\User;
 use app\services\ServerService;
@@ -12,7 +11,6 @@ use Throwable;
 use Yii;
 use app\models\search\UserSearch;
 use yii\bootstrap4\ActiveForm;
-use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -71,6 +69,7 @@ class UsersController extends Controller
 
     /**
      * Возвращает список пользователей.
+     *
      * @return mixed
      */
     public function actionIndex()
@@ -87,6 +86,7 @@ class UsersController extends Controller
 
     /**
      * Создает пользователя.
+     *
      * @return mixed
      */
     public function actionCreate()
@@ -109,6 +109,7 @@ class UsersController extends Controller
 
     /**
      * Обновляет пользователя.
+     *
      * @param integer $id
      * @return mixed
      * @throws Exception
@@ -133,6 +134,7 @@ class UsersController extends Controller
 
     /**
      * Удаляет пользователя.
+     *
      * @param integer $id
      * @return mixed
      * @throws Throwable

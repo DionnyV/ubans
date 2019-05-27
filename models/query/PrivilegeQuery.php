@@ -11,11 +11,6 @@ use app\models\Privilege;
  */
 class PrivilegeQuery extends \yii\db\ActiveQuery
 {
-    /*public function active()
-    {
-        return $this->andWhere('[[status]]=1');
-    }*/
-
     /**
      * {@inheritdoc}
      * @return Privilege[]|array

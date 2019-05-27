@@ -12,10 +12,29 @@ use yii\db\Connection;
  */
 class InstallForm extends Model
 {
+    /**
+     * @var string хост.
+     */
     public $host = 'localhost';
+
+    /**
+     * @var string база данных.
+     */
     public $dbName = '';
+
+    /**
+     * @var string пользователь.
+     */
     public $username = '';
+
+    /**
+     * @var string пароль.
+     */
     public $password = '';
+
+    /**
+     * @var string префикс базы данных.
+     */
     public $tablePrefix = 'amx_';
 
     /**
@@ -42,7 +61,12 @@ class InstallForm extends Model
         parent::init();
     }
 
-    public function connect()
+    /**
+     * Проверяет подключение к базе данных.
+     *
+     * @return bool
+     */
+    public function connect(): bool
     {
         $db = new Connection([
             'dsn' => "mysql:host=$this->host;dbname=$this->dbName",
@@ -69,6 +93,7 @@ class InstallForm extends Model
                     $this->addError('host', 'Ошибка подключения к базе данных. Проверьте все данные.');
             }
         }
+        return false;
     }
 
     /**

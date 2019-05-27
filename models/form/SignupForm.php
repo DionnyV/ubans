@@ -10,8 +10,19 @@ use app\models\User;
  */
 class SignupForm extends Model
 {
+    /**
+     * @var string имя пользователя.
+     */
     public $username;
+
+    /**
+     * @var string почта.
+     */
     public $email;
+
+    /**
+     * @var string пароль.
+     */
     public $password;
 
     /**
@@ -72,7 +83,6 @@ class SignupForm extends Model
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();
         return $user->save() && $this->sendEmail($user);
-
     }
 
     /**

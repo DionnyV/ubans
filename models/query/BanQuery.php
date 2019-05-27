@@ -18,7 +18,7 @@ class BanQuery extends ActiveQuery
      */
     public function active()
     {
-        //todo
+        //todo реализовать выборку только действующих банов.
         return $this->andWhere([]);
     }
 

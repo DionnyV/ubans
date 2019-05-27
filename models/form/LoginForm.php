@@ -10,10 +10,24 @@ use yii\base\Model;
  */
 class LoginForm extends Model
 {
+    /**
+     * @var string имя пользователя.
+     */
     public $username;
+
+    /**
+     * @var string пароль.
+     */
     public $password;
+
+    /**
+     * @var bool запоминть вход.
+     */
     public $rememberMe = true;
 
+    /**
+     * @var User
+     */
     private $_user;
 
     /**
@@ -22,11 +36,8 @@ class LoginForm extends Model
     public function rules()
     {
         return [
-            // username and password are both required
             [['username', 'password'], 'required'],
-            // rememberMe must be a boolean value
             ['rememberMe', 'boolean'],
-            // password is validated by validatePassword()
             ['password', 'validatePassword'],
         ];
     }

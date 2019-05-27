@@ -3,7 +3,7 @@
 namespace app\models\query;
 
 /**
- * This is the ActiveQuery class for [[Amxadmins]].
+ * Модель запросов пользователей.
  *
  * @see User
  */

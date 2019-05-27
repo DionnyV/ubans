@@ -19,6 +19,10 @@ class ServerService
      * @var SourceQuery
      */
     private $sourceQuery;
+
+    /**
+     * @var array информация по серверам.
+     */
     private $serversInfo = [];
 
     /**

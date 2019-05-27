@@ -4,15 +4,17 @@ namespace app\controllers;
 
 use app\models\search\ServerSearch;
 use app\services\ServerService;
+use Exception;
+use Throwable;
 use xPaw\SourceQuery\Exception\InvalidArgumentException;
 use xPaw\SourceQuery\Exception\InvalidPacketException;
 use xPaw\SourceQuery\Exception\TimeoutException;
 use Yii;
 use app\models\Server;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * Контроллер серверов.
@@ -75,7 +77,7 @@ class ServersController extends Controller
      * @return mixed
      * @throws InvalidArgumentException
      * @throws InvalidPacketException
-     * @throws NotFoundHttpException if the model cannot be found
+     * @throws NotFoundHttpException
      * @throws TimeoutException
      */
     public function actionView($id)
@@ -92,9 +94,9 @@ class ServersController extends Controller
      *
      * @param integer $id
      * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws NotFoundHttpException
+     * @throws Throwable
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
@@ -107,14 +109,14 @@ class ServersController extends Controller
      * Находит сервер по идентификатору.
      *
      * @param integer $id
-     * @return Server the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
+     * @return Server
+     * @throws NotFoundHttpException
      */
     protected function findModel($id)
     {
         try {
             return $this->serverService->findById($id);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new NotFoundHttpException('Сервер не найден.');
         }
     }

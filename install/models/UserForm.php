@@ -20,6 +20,9 @@ class UserForm extends User
      */
     private $role = 'root';
 
+    /**
+     * {@inheritDoc}
+     */
     public function __construct($config = [])
     {
         $this->user = new User();

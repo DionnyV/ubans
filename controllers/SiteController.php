@@ -3,12 +3,8 @@
 namespace app\controllers;
 
 use app\models\form\PasswordResetRequestForm;
-use app\models\form\ResendVerificationEmailForm;
 use app\models\form\ResetPasswordForm;
-use app\models\form\SignupForm;
-use app\models\form\VerifyEmailForm;
 use app\services\UserService;
-use InvalidArgumentException;
 use Yii;
 use yii\base\InvalidParamException;
 use yii\filters\AccessControl;
@@ -125,7 +121,7 @@ class SiteController extends Controller
     }
 
     /**
-     * Выйти.
+     * Выход.
      *
      * @return Response
      */
