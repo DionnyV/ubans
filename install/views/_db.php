@@ -1,12 +1,12 @@
 <?php
 
-use app\install\models\InstallForm;
+use app\install\models\DbForm;
 use yii\bootstrap4\ActiveForm;
 use yii\bootstrap4\Html;
 
 /* @var $this yii\web\View */
 /* @var $form \yii\widgets\ActiveForm */
-/* @var $model InstallForm */
+/* @var $model DbForm */
 
 ?>
 <?php $form = ActiveForm::begin(['id' => 'install']); ?>

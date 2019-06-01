@@ -1,10 +1,11 @@
 <?php
 
-$params = require __DIR__ . '/params.php';
-$db = require __DIR__ . '/db.php';
+$params = file_exists(__DIR__ . '/params.php') ? require __DIR__ . '/params.php' : null;
+$db = file_exists(__DIR__ . '/db.php') ? require __DIR__ . '/db.php' : null;
 
 $config = [
     'id' => 'basic',
+    'name' => $params['name'] ?? 'ubans.ru',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'language' => 'ru-RU',
@@ -14,8 +15,7 @@ $config = [
     ],
     'components' => [
         'request' => [
-            // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-            'cookieValidationKey' => 'tX8m5Wom9cT6KTXk8iNMx6VOyTIHImVT',
+            'cookieValidationKey' => $params['cookieValidationKey'] ?? 'willBeChanged',
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -31,11 +31,10 @@ $config = [
             'errorAction' => 'site/error',
         ],
         'mailer' => [
-            'class' => 'yii\swiftmailer\Mailer',
-            // send all mails to a file by default. You have to set
-            // 'useFileTransport' to false and configure a transport
-            // for the mailer to send real emails.
-            'useFileTransport' => true,
+            'class' => 'wadeshuler\sendgrid\Mailer',
+            'viewPath' => '@app/mail',
+            'useFileTransport' => false,
+            'apiKey' => $params['apiKey'] ?? null
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -66,10 +65,15 @@ $config = [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            'rules' => [],
         ],
     ],
-    'params' => $params,
+    'params' => [
+        'user.passwordResetTokenExpire' => 3600,
+        'bsDependencyEnabled' => false,
+        'bsVersion' => 4,
+        'adminEmail' => $params['adminEmail'] ?? 'admin@ubans.ru',
+        'supportEmail' => $params['supportEmail'] ?? 'no-reply@ubans.ru',
+    ],
 ];
 
 return $config;

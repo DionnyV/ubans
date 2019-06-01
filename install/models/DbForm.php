@@ -10,7 +10,7 @@ use yii\db\Connection;
 /**
  * Модель формы страницы установки.
  */
-class InstallForm extends Model
+class DbForm extends Model
 {
     /**
      * @var string хост.

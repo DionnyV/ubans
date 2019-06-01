@@ -2,7 +2,9 @@
 
 namespace app\install\services;
 
-use app\install\models\InstallForm;
+use app\install\models\DbForm;
+use app\install\models\SettingsForm;
+use app\models\User;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\InvalidRouteException;
@@ -18,23 +20,69 @@ class InstallService
     /**
      * Выполняет установку сайта.
      *
-     * @param InstallForm $form
+     * @param DbForm $form
      * @throws InvalidConfigException
      * @throws InvalidRouteException
      * @throws \yii\console\Exception
+     * @throws \Exception
      */
-    public function install(InstallForm $form)
+    public function install(DbForm $form): void
     {
+        if ($this->checkInstallation()) {
+            throw new \Exception('Сайт уже установлен.');
+        }
         $this->createDbConfig($form);
         $this->migrate();
     }
 
     /**
-     * Проверяет статус установки сайта.
+     * Создаем первоначальные настройки сайта.
+     *
+     * @param SettingsForm $form
+     * @throws \Exception
      */
-    public function checkInstallation()
+    public function createSiteSettings(SettingsForm $form): void
     {
-        //todo реализовать метод проверки статуса установки сайта.
+        $this->createSettingsConfig($form);
+    }
+
+    /**
+     * Проверяет статус установки сайта.
+     *
+     * @return bool
+     */
+    public function checkInstallation(): bool
+    {
+        if (file_exists(Yii::getAlias('@app/config/db.php'))) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Проверяет наличие настроек сайта.
+     *
+     * @return bool
+     */
+    public function checkSettingsExist(): bool
+    {
+        if (file_exists(Yii::getAlias('@app/config/params.php'))) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Проверяет наличие пользователей в бд.
+     *
+     * @return bool
+     */
+    public function checkUserExist(): bool
+    {
+        if (User::find()->count() == 0) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -43,7 +91,7 @@ class InstallService
      * @param Connection $connection
      * @throws Exception
      */
-    public function checkDbConnection(Connection $connection)
+    public function checkDbConnection(Connection $connection): void
     {
         $connection->open();
         if ($connection === null) {
@@ -52,15 +100,29 @@ class InstallService
     }
 
     /**
-     * Создает конфигурационный файл.
+     * Создает конфигурационный файл базы данных.
      *
-     * @param InstallForm $form
+     * @param DbForm $form
      * @throws \Exception
      */
-    private function createDbConfig(InstallForm $form): void
+    private function createDbConfig(DbForm $form): void
     {
         $dbFile = Yii::getAlias('@app/config/db.php');
-        if (!is_writable(dirname($dbFile)) || !file_put_contents($dbFile, $this->prepareConfigFile($form))) {
+        if (!is_writable(dirname($dbFile)) || !file_put_contents($dbFile, $this->prepareDbConfigFile($form))) {
+            throw new \Exception('Не удалось создать конфиг.');
+        }
+    }
+
+    /**
+     * Создает конфигурационный файл сайта.
+     *
+     * @param SettingsForm $form
+     * @throws \Exception
+     */
+    private function createSettingsConfig(SettingsForm $form): void
+    {
+        $dbFile = Yii::getAlias('@app/config/params.php');
+        if (!is_writable(dirname($dbFile)) || !file_put_contents($dbFile, $this->prepareSettingsConfigFile($form))) {
             throw new \Exception('Не удалось создать конфиг.');
         }
     }
@@ -72,7 +134,7 @@ class InstallService
      * @throws InvalidRouteException
      * @throws \yii\console\Exception
      */
-    private function migrate()
+    private function migrate(): void
     {
         ob_start();
         $oldApp = Yii::$app;
@@ -131,12 +193,12 @@ class InstallService
     }
 
     /**
-     * Подготавливает информацию для записи в конфиг.
+     * Подготавливает информацию базы данных для записи в конфиг.
      *
-     * @param InstallForm $form
+     * @param DbForm $form
      * @return string
      */
-    private function prepareConfigFile(InstallForm $form): string
+    private function prepareDbConfigFile(DbForm $form): string
     {
         return "<?php\n\nreturn [\n   'class' => 'yii\db\Connection',\n" .
             "   'dsn' => 'mysql:host=" . $form->host . ";dbname=" . $form->dbName . "',\n" .
@@ -144,5 +206,23 @@ class InstallService
             "   'password' => '" . $form->password . "',\n" .
             "   'charset' => 'utf8',\n" .
             "   'tablePrefix' => '" . $form->tablePrefix . "',\n];\n";
+    }
+
+    /**
+     * Подготавливает информацию настроек сайта для записи в конфиг.
+     *
+     * @param SettingsForm $form
+     * @return string
+     * @throws \yii\base\Exception
+     */
+    private function prepareSettingsConfigFile(SettingsForm $form): string
+    {
+        return "<?php\n\nreturn [\n" .
+            "   'name' => '" . $form->name . "',\n" .
+            "   'adminEmail' => '" . $form->adminEmail . "',\n" .
+            "   'supportEmail' => '" . $form->supportEmail . "',\n" .
+            "   'apiKey' => '" . $form->apiKey . "',\n" .
+            "   'cookieValidationKey' => '" . Yii::$app->security->generateRandomString() . "',\n" .
+            "];\n";
     }
 }
