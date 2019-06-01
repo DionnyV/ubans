@@ -6,11 +6,13 @@ use app\install\models\DbForm;
 use app\install\models\SettingsForm;
 use app\models\User;
 use Yii;
+use yii\base\ErrorException;
 use yii\base\InvalidConfigException;
 use yii\base\InvalidRouteException;
 use yii\console\Application;
 use yii\db\Connection;
 use yii\db\Exception;
+use yii\helpers\FileHelper;
 
 /**
  * Сервис установки сайта.
@@ -44,6 +46,16 @@ class InstallService
     public function createSiteSettings(SettingsForm $form): void
     {
         $this->createSettingsConfig($form);
+    }
+
+    /**
+     * Завершает установку.
+     *
+     * @throws \Exception
+     */
+    public function finishInstallation()
+    {
+        $this->deleteInstallFiles();
     }
 
     /**
@@ -146,6 +158,17 @@ class InstallService
         ]);
         Yii::$app = $oldApp;
         ob_clean();
+    }
+
+    /**
+     * Удаляет установочные файлы.
+     *
+     * @throws ErrorException
+     */
+    private function deleteInstallFiles(): void
+    {
+        $installDir = Yii::getAlias('@app/install');
+        FileHelper::removeDirectory($installDir);
     }
 
     /**
