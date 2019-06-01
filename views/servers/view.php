@@ -18,7 +18,7 @@ $playersCount = 0;
 <div class="server-view">
     <div class="card-deck">
         <div class="card" style="max-width: 350px">
-            <img src="http://bratm.najky.webnoviny.sk/cache/medium/uploads/2015/04/counterstrike-dust.jpg?i=31541"
+            <img src="https://tsarvar.com/maps/cs1.6/<?= Html::encode($info['Map'])?>/2.jpg"
                  class="card-img-top">
             <div class="card-body">
                 <h5><?= Html::encode($model->hostname) ?></h5>
@@ -27,6 +27,7 @@ $playersCount = 0;
                     <a href="steam://connect/<?= Html::encode($model->address) ?>"
                        class="card-text"><?= Html::encode($model->address) ?></a>
                 </p>
+                <p class="card-text"><?= Html::encode($model->description) ?></p>
                 <div class="progress" style="height: 25px; position: relative;">
                     <span style="position: absolute; line-height: 25px; width: 100%; text-align: center;">
                         <?php if (isset($info['Players'])) : ?>
@@ -89,6 +90,8 @@ $playersCount = 0;
     </div>
     <div class="form-group text-right mt-3">
         <?= Html::a(Yii::t('app', 'Back'), ['index'], ['class' => 'btn btn-dark']) ?>
-        <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], ['class' => 'btn btn-warning']) ?>
+        <?php if (Yii::$app->user->can('manageSettings')) : ?>
+            <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-warning']) ?>
+        <?php endif; ?>
     </div>
 </div>

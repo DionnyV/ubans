@@ -12,6 +12,7 @@ use Yii;
  * @property int $timestamp
  * @property string $hostname
  * @property string $address
+ * @property string $description
  * @property string $gametype
  * @property string $rcon
  * @property string $amxban_version
@@ -44,6 +45,7 @@ class Server extends \yii\db\ActiveRecord
             [['hostname', 'address'], 'string', 'max' => 100],
             [['gametype', 'rcon', 'amxban_version'], 'string', 'max' => 32],
             [['amxban_motd'], 'string', 'max' => 250],
+            [['description'], 'string'],
         ];
     }
 
@@ -57,6 +59,7 @@ class Server extends \yii\db\ActiveRecord
             'timestamp' => Yii::t('app', 'Timestamp'),
             'hostname' => Yii::t('app', 'Название'),
             'address' => Yii::t('app', 'Адрес'),
+            'description' => Yii::t('app', 'Описание'),
             'gametype' => Yii::t('app', 'Gametype'),
             'rcon' => Yii::t('app', 'Rcon'),
             'amxban_version' => Yii::t('app', 'Amxban Version'),
