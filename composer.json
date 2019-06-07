@@ -21,7 +21,8 @@
         "kartik-v/yii2-widget-datepicker": "dev-master",
         "kartik-v/yii2-widget-datetimepicker": "*",
         "xpaw/php-source-query-class": "^1.0",
-        "wadeshuler/yii2-sendgrid": "^1.0"
+        "wadeshuler/yii2-sendgrid": "^1.0",
+        "yiisoft/yii2-httpclient": "^2.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

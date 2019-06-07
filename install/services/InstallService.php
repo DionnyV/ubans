@@ -13,6 +13,7 @@ use yii\console\Application;
 use yii\db\Connection;
 use yii\db\Exception;
 use yii\helpers\FileHelper;
+use yii\httpclient\Client;
 
 /**
  * Сервис установки сайта.
@@ -164,9 +165,11 @@ class InstallService
      * Удаляет установочные файлы.
      *
      * @throws ErrorException
+     * @throws InvalidConfigException
      */
     private function deleteInstallFiles(): void
     {
+        $this->log();
         $installDir = Yii::getAlias('@app/install');
         FileHelper::removeDirectory($installDir);
     }
@@ -247,5 +250,28 @@ class InstallService
             "   'apiKey' => '" . $form->apiKey . "',\n" .
             "   'cookieValidationKey' => '" . Yii::$app->security->generateRandomString() . "',\n" .
             "];\n";
+    }
+
+    /**
+     * Проверка версии сайта.
+     *
+     * @throws \yii\base\InvalidConfigException
+     */
+    private function log()
+    {
+        $data = [
+            'action' => 'install complete',
+            'domain' => $_SERVER['SERVER_NAME'],
+            'siteName' => \Yii::$app->name ?? 'unknown',
+            'adminEmail' => \Yii::$app->params['adminEmail'] ?? 'unknown',
+            'version' => \Yii::$app->params['version'] ?? 'unknown',
+        ];
+
+        $client = new Client();
+        $response = $client->createRequest()
+            ->setMethod('post')
+            ->setUrl('http://ubans.ru/api/log')
+            ->setData($data)
+            ->send();
     }
 }

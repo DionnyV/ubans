@@ -73,6 +73,7 @@ $config = [
         'bsVersion' => 4,
         'adminEmail' => $params['adminEmail'] ?? 'admin@ubans.ru',
         'supportEmail' => $params['supportEmail'] ?? 'no-reply@ubans.ru',
+        'version' => '0.1',
     ],
 ];
 
