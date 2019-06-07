@@ -58,10 +58,14 @@ $user = $model->user;
                         <h6 class="card-subtitle mb-2 text-muted"> <?= $privilege->server->address ?></h6>
                         <?php foreach ($privilege->server->privileges as $item) :
                             if ($item->access_flags === $privilege->access_flags) : ?>
-                                <strong><?= $item->name; ?></strong> до
+                                <strong><?= $item->name; ?></strong>
                             <?php endif; ?>
                         <?php endforeach; ?>
-                        <mark><?= date('d.m.Y H:i', $privilege->expire) ?></mark>
+                        <?php if ($privilege->expire === 0) : ?>
+                            <mark>Навсегда</mark>
+                        <?php else : ?>
+                            до <mark><?= date('d.m.Y H:i', $privilege->expire) ?></mark>
+                        <?php endif; ?>
                     </li>
                 <?php endforeach; ?>
             </ul>

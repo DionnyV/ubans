@@ -5,10 +5,6 @@ namespace app\controllers;
 use app\models\search\ServerSearch;
 use app\services\ServerService;
 use Exception;
-use Throwable;
-use xPaw\SourceQuery\Exception\InvalidArgumentException;
-use xPaw\SourceQuery\Exception\InvalidPacketException;
-use xPaw\SourceQuery\Exception\TimeoutException;
 use Yii;
 use app\models\Server;
 use yii\db\StaleObjectException;
@@ -114,7 +110,7 @@ class ServersController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException
-     * @throws Throwable
+     * @throws \Throwable
      * @throws StaleObjectException
      */
     public function actionDelete($id)

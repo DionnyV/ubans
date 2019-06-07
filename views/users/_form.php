@@ -80,29 +80,39 @@ $user = $model->user;
                     </div>
                     <span id="privilege-<?= $privilege->server_id ?>"
                           style="display:<?= !empty($privilege->access_flags) ? 'block' : 'none' ?>;">
-                        <?= $form->field($privilege, "[$privilege->server_id]access_flags")
-                            ->dropdownList(
-                                ServerService::getPrivilegesList($privilege->server),
-                                ['disabled' => empty($privilege->access_flags)]
-                            ) ?>
 
-                        <?= $form->field($privilege, "[$privilege->server_id]expire")
-                            ->widget(DateTimePicker::class, [
-                                'type' => DateTimePicker::TYPE_INPUT,
-                                'options' => [
-                                    'placeholder' => 'Ввод даты/времени...',
-                                    'value' => Yii::$app->formatter->asDatetime($privilege->expire ?? time(), 'dd.MM.Y hh:mm'),
-                                    'disabled' => empty($privilege->access_flags),
-                                ],
-                                'convertFormat' => true,
-                                'pluginOptions' => [
-                                    'format' => 'dd.MM.yyyy hh:i',
-                                    'startDate' => Yii::$app->formatter->asDatetime(time(), 'dd.MM.Y hh:mm'),
-                                    'autoclose' => true,
-                                    'weekStart' => 1,
-                                ]
-                            ]);
-                        ?>
+                        <?php $privileges = ServerService::getPrivilegesList($privilege->server); ?>
+                        <?php if (!empty($privileges)) : ?>
+                            <?= $form->field($privilege, "[$privilege->server_id]access_flags")
+                                ->dropdownList(
+                                    ServerService::getPrivilegesList($privilege->server),
+                                    ['disabled' => empty($privilege->access_flags)]
+                                ) ?>
+                            <?= $form->field($privilege, "[$privilege->server_id]expire")
+                                ->widget(DateTimePicker::class, [
+                                    'type' => DateTimePicker::TYPE_INPUT,
+                                    'options' => [
+                                        'placeholder' => 'Ввод даты/времени...',
+                                        'value' => Yii::$app->formatter->asDatetime(
+                                            $privilege->expire ?? time(),
+                                            'dd.MM.Y hh:mm'
+                                        ),
+                                        'disabled' => empty($privilege->access_flags),
+                                    ],
+                                    'convertFormat' => true,
+                                    'pluginOptions' => [
+                                        'format' => 'dd.MM.yyyy hh:i',
+                                        'startDate' => Yii::$app->formatter->asDatetime(time(), 'dd.MM.Y hh:mm'),
+                                        'autoclose' => true,
+                                        'weekStart' => 1,
+                                    ]
+                                ]);
+                            ?>
+                        <?php else : ?>
+                            <span class="text-danger">Пожалуйста, добавьте хотя бы одну привилегию для сервера.
+                            <?= Html::a('Добавить', Url::to(['privileges/index'])); ?>
+                            </span>
+                        <?php endif; ?>
                         <hr>
                     </span>
                 <?php endforeach; ?>

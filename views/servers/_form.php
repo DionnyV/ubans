@@ -33,6 +33,7 @@ use yii\widgets\ActiveForm;
         </div>
     </div>
     <div class="form-group text-right">
+        <?= Html::a(Yii::t('app', 'Privileges'), ['privileges/index'], ['class' => 'btn btn-info']) ?>
         <?= Html::a(Yii::t('app', 'Cancel'), ['index'], ['class' => 'btn btn-light']) ?>
         <?php if (!$model->isNewRecord) : ?>
             <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], ['class' => 'btn btn-warning']) ?>
