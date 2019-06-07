@@ -3,10 +3,8 @@
 namespace app\services;
 
 use app\models\Server;
+use app\services\dto\ServerInfoData;
 use Exception;
-use xPaw\SourceQuery\Exception\InvalidArgumentException;
-use xPaw\SourceQuery\Exception\InvalidPacketException;
-use xPaw\SourceQuery\Exception\TimeoutException;
 use xPaw\SourceQuery\SourceQuery;
 use yii\helpers\ArrayHelper;
 
@@ -19,11 +17,6 @@ class ServerService
      * @var SourceQuery
      */
     private $sourceQuery;
-
-    /**
-     * @var array информация по серверам.
-     */
-    private $serversInfo = [];
 
     /**
      * {@inheritDoc}
@@ -52,23 +45,51 @@ class ServerService
     /**
      * Возвращает информацию по всем серверам.
      *
-     * @return array
-     * @throws InvalidArgumentException
-     * @throws InvalidPacketException
-     * @throws TimeoutException
+     * @return ServerInfoData[]
      */
-    public function getServersInfo()
+    public function getServersInfo(): array
     {
         $data = [];
         foreach (Server::find()->all() as $server) {
-            $data[] = [
-                'hostname' => $server->hostname,
-                'ip' => $server->address,
-                'online' => $this->getOnline($server),
-                'onlinePercents' => $this->getOnlineInPercents($server)
-            ];
+            $data[$server->id] = $this->getServerInfo($server);
         }
         return $data;
+    }
+
+    /**
+     * Возвращает объект данных о сервере.
+     *
+     * @param Server $server
+     * @return ServerInfoData
+     */
+    public function getServerInfo(Server $server): ServerInfoData
+    {
+        $serverInfo = new ServerInfoData();
+        $serverInfo->id = $server->id;
+        $serverInfo->hostname = $server->hostname;
+        $serverInfo->ip = $this->getServerIp($server);
+        $serverInfo->port = $this->getPort($server);
+        $serverInfo->address = $server->address;
+
+        try {
+            $this->sourceQuery->Connect($serverInfo->ip, $serverInfo->port, 1, $this->sourceQuery::GOLDSOURCE);
+            $info = $this->sourceQuery->GetInfo();
+            $players = $this->sourceQuery->GetPlayers();
+            $serverInfo->online = $info['Players'];
+            $serverInfo->maxPlayers = $info['MaxPlayers'];
+            $serverInfo->onlinePercents = $this->calculateOnlineInPercents(
+                $serverInfo->online,
+                $serverInfo->maxPlayers
+            );
+            $serverInfo->map = $info['Map'];
+            $serverInfo->modDesc = $info['ModDesc'];
+            $serverInfo->playersInfo = $players;
+        } catch (Exception $e) {
+            // игнорируем ошибки
+        } finally {
+            $this->sourceQuery->Disconnect();
+        }
+        return $serverInfo;
     }
 
     /**
@@ -101,66 +122,15 @@ class ServerService
     }
 
     /**
-     * Возвращает онлайн сервера.
-     *
-     * @param Server $server
-     * @return string
-     * @throws InvalidArgumentException
-     * @throws InvalidPacketException
-     * @throws TimeoutException
-     */
-    public function getOnline(Server $server)
-    {
-        $info = $this->getInfo($server);
-
-        if ($info) {
-            return $info['Players'] . '/' . $info['MaxPlayers'];
-        }
-        return 'Нет информации.';
-    }
-
-    /**
-     * Возвращает информацию о сервере.
-     *
-     * @param Server $server
-     * @return array|bool
-     * @throws InvalidArgumentException
-     * @throws InvalidPacketException
-     * @throws TimeoutException
-     */
-    public function getInfo(Server $server)
-    {
-        if (!isset($this->serversInfo[$server->id]) || empty($this->serversInfo[$server->id])) {
-            $ip = $this->getServerIp($server);
-            $port = $this->getPort($server);
-            $this->sourceQuery->Connect($ip, $port, 1, $this->sourceQuery::GOLDSOURCE);
-            $this->serversInfo[$server->id] = $this->sourceQuery->GetInfo();
-            if ($this->serversInfo[$server->id]) {
-                $this->serversInfo[$server->id]['PlayersInfo'] = $this->sourceQuery->GetPlayers();
-                $this->serversInfo[$server->id]['OnlineInPercents'] = $this->getOnlineInPercents($server);
-            }
-            $this->sourceQuery->Disconnect();
-        }
-        return $this->serversInfo[$server->id];
-    }
-
-    /**
      * Возвращает кол-во игроков в процентах.
      *
-     * @param Server $server
+     * @param int $currentPlayers
+     * @param int $maxPlayers
      * @return int
-     * @throws InvalidArgumentException
-     * @throws InvalidPacketException
-     * @throws TimeoutException
      */
-    private function getOnlineInPercents(Server $server): int
+    private function calculateOnlineInPercents(int $currentPlayers, int $maxPlayers): int
     {
-        $info = $this->getInfo($server);
-
-        if ($info) {
-            return round($info['Players'] * 100 / $info['MaxPlayers']);
-        }
-        return 0;
+        return round($currentPlayers * 100 / $maxPlayers);
     }
 
     /**
@@ -171,7 +141,12 @@ class ServerService
      */
     private function getServerIp(Server $server)
     {
-        return explode(':', $server->address)[0];
+        $ip = '';
+        if (strpos($server->address, ':')) {
+            $ip = explode(':', $server->address)[0];
+        }
+
+        return $ip;
     }
 
     /**
@@ -182,6 +157,10 @@ class ServerService
      */
     private function getPort(Server $server)
     {
-        return explode(':', $server->address)[1];
+        $port = '';
+        if (strpos($server->address, ':')) {
+            $port = explode(':', $server->address)[1];
+        }
+        return $port;
     }
 }

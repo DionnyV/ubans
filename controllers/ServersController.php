@@ -63,10 +63,12 @@ class ServersController extends Controller
     {
         $searchModel = new ServerSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $servers = $this->serverService->getServersInfo();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'servers' => $servers
         ]);
     }
 
@@ -75,17 +77,14 @@ class ServersController extends Controller
      *
      * @param integer $id
      * @return mixed
-     * @throws InvalidArgumentException
-     * @throws InvalidPacketException
      * @throws NotFoundHttpException
-     * @throws TimeoutException
      */
     public function actionView($id)
     {
-        $info = $this->serverService->getInfo($this->findModel($id));
+        $server = $this->serverService->getServerInfo($this->findModel($id));
         return $this->render('view', [
             'model' => $this->findModel($id),
-            'info' => $info
+            'server' => $server
         ]);
     }
 

@@ -1,11 +1,12 @@
 <?php
 
+use app\services\dto\ServerInfoData;
 use yii\helpers\Html;
 use yii\web\YiiAsset;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Server */
-/* @var $info array */
+/* @var $server ServerInfoData */
 
 $this->title = Yii::t('app', '{name}', [
     'name' => $model->hostname,
@@ -16,75 +17,75 @@ YiiAsset::register($this);
 $playersCount = 0;
 ?>
 <div class="server-view">
-    <div class="card-deck">
-        <div class="card" style="max-width: 350px">
-            <img src="https://tsarvar.com/maps/cs1.6/<?= Html::encode($info['Map'])?>/2.jpg"
-                 class="card-img-top">
-            <div class="card-body">
-                <h5><?= Html::encode($model->hostname) ?></h5>
-                <h6 class="card-subtitle text-muted"><?= Html::encode($info['ModDesc']) ?></h6>
-                <p class="my-2">
-                    <a href="steam://connect/<?= Html::encode($model->address) ?>"
-                       class="card-text"><?= Html::encode($model->address) ?></a>
-                </p>
-                <p class="card-text"><?= Html::encode($model->description) ?></p>
-                <div class="progress" style="height: 25px; position: relative;">
+    <div class="row">
+        <div class="col-lg-3 mb-3">
+            <div class="card">
+                <img src="https://tsarvar.com/maps/cs1.6/<?= Html::encode($server->map) ?>/2.jpg"
+                     class="card-img-top">
+                <div class="card-body">
+                    <h5><?= Html::encode($model->hostname) ?></h5>
+                    <h6 class="card-subtitle text-muted"><?= Html::encode($server->modDesc) ?></h6>
+                    <p class="my-2">
+                        <a href="steam://connect/<?= Html::encode($model->address) ?>"
+                           class="card-text"><?= Html::encode($model->address) ?></a>
+                    </p>
+                    <p class="card-text"><?= Html::encode($model->description) ?></p>
+                    <div class="progress" style="height: 25px; position: relative;">
                     <span style="position: absolute; line-height: 25px; width: 100%; text-align: center;">
-                        <?php if (isset($info['Players'])) : ?>
-                            <?= Html::encode($info['Players']) . '/' . Html::encode($info['MaxPlayers']) ?>
-                        <?php else : ?>
-                            Нет информации.
-                        <?php endif; ?>
+                        <?= Html::encode($server->online) . '/' . Html::encode($server->maxPlayers) ?>
                     </span>
-                    <div class="progress-bar progress-bar-striped <?php
-                    if ($info['OnlineInPercents'] <= 50) {
-                        echo 'bg-success';
-                    } elseif ($info['OnlineInPercents'] > 50 && $info['OnlineInPercents'] < 90) {
-                        echo 'bg-warning';
-                    } else {
-                        echo 'bg-danger';
-                    }
-                    ?>"
-                         role="progressbar"
-                         style="width: <?= $info['OnlineInPercents'] ?>%"
-                         aria-valuenow="<?= $info['OnlineInPercents'] ?>"
-                         aria-valuemin="0"
-                         aria-valuemax="100">
+                        <div class="progress-bar progress-bar-striped <?php
+                        if ($server->onlinePercents <= 50) {
+                            echo 'bg-success';
+                        } elseif ($server->onlinePercents > 50 && $server->onlinePercents < 90) {
+                            echo 'bg-warning';
+                        } else {
+                            echo 'bg-danger';
+                        }
+                        ?>"
+                             role="progressbar"
+                             style="width: <?= $server->onlinePercents ?>%"
+                             aria-valuenow="<?= $server->onlinePercents ?>"
+                             aria-valuemin="0"
+                             aria-valuemax="100">
+                        </div>
                     </div>
+                    <p class="card-text text-right">
+                        <small class="text-muted"><?= Html::encode($server->map) ?></small>
+                    </p>
                 </div>
-                <p class="card-text text-right">
-                    <small class="text-muted"><?= Html::encode($info['Map']) ?></small>
-                </p>
             </div>
         </div>
-        <div class="card">
-            <div class="card-body">
-                <table class="table table-borderless table-striped">
-                <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Ник</th>
-                    <th scope="col">Фраги</th>
-                    <th scope="col">Играет</th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php if (isset($info['PlayersInfo'])) : ?>
-                    <?php foreach ($info['PlayersInfo'] as $player) : ?>
+        <div class="col-lg-9">
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-borderless table-striped">
+                        <thead>
                         <tr>
-                            <th scope="row"><?= ++$playersCount ?></th>
-                            <td><?= Html::encode($player['Name']) ?></td>
-                            <td><?= Html::encode($player['Frags']) ?></td>
-                            <td><?= Html::encode($player['TimeF']) ?></td>
+                            <th scope="col">#</th>
+                            <th scope="col">Ник</th>
+                            <th scope="col">Фраги</th>
+                            <th scope="col">Играет</th>
                         </tr>
-                    <?php endforeach; ?>
-                <?php else : ?>
-                    <tr>
-                        <td class="text-center" colspan="4">Нет информации.</td>
-                    </tr>
-                <?php endif; ?>
-                </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        <?php if (!empty($server->playersInfo)) : ?>
+                            <?php foreach ($server->playersInfo as $player) : ?>
+                                <tr>
+                                    <th scope="row"><?= ++$playersCount ?></th>
+                                    <td><?= Html::encode($player['Name']) ?></td>
+                                    <td><?= Html::encode($player['Frags']) ?></td>
+                                    <td><?= Html::encode($player['TimeF']) ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else : ?>
+                            <tr>
+                                <td class="text-center" colspan="4">Нет информации.</td>
+                            </tr>
+                        <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

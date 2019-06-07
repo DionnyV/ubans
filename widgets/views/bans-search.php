@@ -8,7 +8,7 @@ use yii\helpers\Url;
 /* @var $form \yii\widgets\ActiveForm */
 
 ?>
-<div class="card" style="max-width: 320px">
+<div class="card mb-3">
     <div class="card-body">
         <?php $form = ActiveForm::begin([
             'action' => ['bans/index'],
