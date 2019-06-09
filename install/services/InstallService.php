@@ -169,7 +169,7 @@ class InstallService
      */
     private function deleteInstallFiles(): void
     {
-        $this->log();
+        $this->version();
         $installDir = Yii::getAlias('@app/install');
         FileHelper::removeDirectory($installDir);
     }
@@ -257,20 +257,17 @@ class InstallService
      *
      * @throws \yii\base\InvalidConfigException
      */
-    private function log()
+    private function version()
     {
         $data = [
-            'action' => 'install complete',
             'domain' => $_SERVER['SERVER_NAME'],
-            'siteName' => \Yii::$app->name ?? 'unknown',
-            'adminEmail' => \Yii::$app->params['adminEmail'] ?? 'unknown',
             'version' => \Yii::$app->params['version'] ?? 'unknown',
         ];
 
         $client = new Client();
         $response = $client->createRequest()
             ->setMethod('post')
-            ->setUrl('http://ubans.ru/api/log')
+            ->setUrl('https://api.ubans.ru/version')
             ->setData($data)
             ->send();
     }

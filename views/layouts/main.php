@@ -53,19 +53,18 @@ AppAsset::register($this);
             setTimeout(function(){ 
                 $.ajax({
                   type: "POST",
-                  url: "https://ubans.ru/api/check-updates",
+                  crossDomain: true,
+                  url: "https://api.ubans.ru/version",
                   data: {
+                    domain: location.hostname,
                     version: "' . $version . '",
                   },
-                  success: function(result) {
-                    console.log(result.data);
-                  }
+                  success: function(result) {},
                 });
-            }, 2000);
+            }, 500);
     });');
     ?>
     <?php $this->endBody() ?>
     </body>
     </html>
 <?php $this->endPage() ?>
-<?php
