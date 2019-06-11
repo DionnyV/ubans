@@ -44,7 +44,7 @@ $user = $model->user;
                     </div>
                     <?= $form->field($user, 'auth_key')->hiddenInput()->label(false); ?>
                     <?= $form->field($user, 'nickname')->textInput(['maxlength' => true]) ?>
-                    <?= $form->field($user, 'steamid')->textInput(['maxlength' => true]) ?>
+                    <?= $form->field($user, 'player_auth')->textInput(['maxlength' => true]) ?>
                     <?= $form->field($user, 'password')->textInput(['maxlength' => true]) ?>
                 </li>
             </ul>

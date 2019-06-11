@@ -22,7 +22,7 @@ class m190411_222810_create_users_table extends Migration
             'username' => $this->string(32)->notNull()->unique()->comment('Логин'),
             'password_hash' => $this->string()->notNull()->comment('Пароль'),
             'nickname' => $this->string(32)->notNull()->unique()->comment('Ник'),
-            'steamid' => $this->string(32)->defaultValue(null)->comment('Steam ID'),
+            'player_auth' => $this->string(32)->defaultValue(null)->comment('Аутентификация на сервере'),
             'flags' => $this->string(32)->defaultValue(null)->comment('Доступ'),
             'auth_key' => $this->string(50)->notNull()->unique()->comment('Уникальная ссылка'),
             'password_reset_token' => $this->string()->unique(),

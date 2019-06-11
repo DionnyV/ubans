@@ -25,7 +25,7 @@ class AccountForm extends Ban
     /**
      * @var array - параметры которые можно менять, изменение остальных отметаем.
      */
-    private $allowedParams = ['nickname', 'auth_key', 'steamid', 'password'];
+    private $allowedParams = ['nickname', 'auth_key', 'player_auth', 'password'];
 
     /**
      * {@inheritDoc}

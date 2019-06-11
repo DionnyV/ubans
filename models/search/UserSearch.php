@@ -18,7 +18,7 @@ class UserSearch extends User
     {
         return [
             [['id', 'created_at', 'updated_at', 'is_deleted'], 'integer'],
-            [['email', 'username', 'password', 'nickname', 'steamid', 'flags', 'auth_code'], 'safe'],
+            [['email', 'username', 'password', 'nickname', 'player_auth', 'flags', 'auth_code'], 'safe'],
         ];
     }
 
@@ -61,7 +61,7 @@ class UserSearch extends User
         $query->andFilterWhere(['like', 'email', $this->email])
             ->andFilterWhere(['like', 'username', $this->username])
             ->andFilterWhere(['like', 'nickname', $this->nickname])
-            ->andFilterWhere(['like', 'steamid', $this->steamid])
+            ->andFilterWhere(['like', 'player_auth', $this->player_auth])
             ->andFilterWhere(['like', 'flags', $this->flags]);
 
         return $dataProvider;

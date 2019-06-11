@@ -20,7 +20,7 @@ use yii\bootstrap4\ActiveForm;
 
     <?= $form->field($model, 'username') ?>
 
-    <?= $form->field($model, 'steamid') ?>
+    <?= $form->field($model, 'player_auth') ?>
 
     <?= $form->field($model, 'nickname') ?>
 

@@ -56,7 +56,7 @@ $user = $model->user;
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
                     <?= $form->field($user, 'nickname')->textInput(['maxlength' => true]) ?>
-                    <?= $form->field($user, 'steamid')->textInput(['maxlength' => true]) ?>
+                    <?= $form->field($user, 'player_auth')->textInput(['maxlength' => true]) ?>
                     <?= $form->field($model, 'flag')->dropdownList($user->getAccountFlags()) ?>
                     <?= $form->field($model, 'options')->checkboxList($user->getAccountOptions()) ?>
                 </li>

@@ -19,7 +19,7 @@ use yii\web\IdentityInterface;
  * @property string $password Пароль (только для записи)
  *
  * @property string $nickname Ник
- * @property string $steamid Steam ID
+ * @property string $player_auth Аутентификация на сервере
  * @property string $flags Доступ
  *
  * @property string $auth_key Уникальная ссылка
@@ -101,8 +101,8 @@ class User extends ActiveRecord implements IdentityInterface
             ['password', 'required', 'on' => self::SCENARIO_CREATE],
             ['password', 'string', 'min' => 6],
             [['email', 'password', 'password_reset_token'], 'string', 'max' => 255],
-            [['username', 'nickname', 'steamid', 'flags', 'auth_key'], 'string', 'max' => 32],
-            [['email', 'username', 'nickname', 'auth_key', 'password_reset_token', 'steamid'], 'unique'],
+            [['username', 'nickname', 'player_auth', 'flags', 'auth_key'], 'string', 'max' => 32],
+            [['email', 'username', 'nickname', 'auth_key', 'password_reset_token', 'player_auth'], 'unique'],
             [['email'], 'email'],
             ['auth_key', 'default', 'value' => Yii::$app->security->generateRandomString()],
             ['auth_key', 'string', 'min' => 20],
@@ -124,7 +124,7 @@ class User extends ActiveRecord implements IdentityInterface
             'username' => Yii::t('app', 'Логин'),
             'password' => Yii::t('app', 'Пароль'),
             'nickname' => Yii::t('app', 'Ник'),
-            'steamid' => Yii::t('app', 'Steam ID'),
+            'player_auth' => Yii::t('app', 'Аутентификация на сервере'),
             'flags' => Yii::t('app', 'Доступ'),
             'auth_key' => Yii::t('app', 'Уникальная ссылка'),
             'status' => Yii::t('app', 'Статус'),
